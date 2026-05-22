@@ -140,6 +140,14 @@ export default function LoginPage() {
                     Registrate
                   </Link>
                 </div>
+                <div className="mt-4 text-center">
+                  <Link
+                    href="/dashboard"
+                    className="text-sm text-slate-500 hover:text-emerald-600 transition-colors"
+                  >
+                    Ver demo sin registrarse
+                  </Link>
+                </div>
               </form>
             </CardContent>
           </Card>
