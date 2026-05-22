@@ -25,10 +25,16 @@ export default function LoginPage() {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
+    // Admin quick login
+    if (email === 'aadmin' && password === 'aadmin') {
+      router.push('/dashboard')
+      return
+    }
+
+    const supabase = createClient()
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
@@ -101,8 +107,8 @@ export default function LoginPage() {
                     <Label htmlFor="email" className="text-slate-700">Email</Label>
                     <Input
                       id="email"
-                      type="email"
-                      placeholder="tu@email.com"
+                      type="text"
+                      placeholder="tu@email.com o aadmin"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
