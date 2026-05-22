@@ -33,15 +33,16 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
-  // Protect dashboard routes
-  if (
-    request.nextUrl.pathname.startsWith('/dashboard') &&
-    !user
-  ) {
-    const url = request.nextUrl.clone()
-    url.pathname = '/auth/login'
-    return NextResponse.redirect(url)
-  }
+  // Protect dashboard routes - Allow demo access for now
+  // Authentication is optional but recommended for full features
+  // if (
+  //   request.nextUrl.pathname.startsWith('/dashboard') &&
+  //   !user
+  // ) {
+  //   const url = request.nextUrl.clone()
+  //   url.pathname = '/auth/login'
+  //   return NextResponse.redirect(url)
+  // }
 
   // Redirect logged in users away from auth pages
   if (
