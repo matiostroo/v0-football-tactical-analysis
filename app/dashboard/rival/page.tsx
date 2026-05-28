@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { PlayerAttributeChart } from '@/components/dashboard/player-attribute-chart'
-import { 
-  Swords, 
-  Shield, 
+import { RivalAIAnalysis } from '@/components/dashboard/rival-ai-analysis'
+import {
+  Swords,
+  Shield,
   Target,
   Users,
   Zap
@@ -20,12 +21,6 @@ export default async function RivalPage() {
     .from('teams')
     .select('*')
     .eq('id', ARSENAL_ID)
-    .single()
-
-  const { data: analysis } = await supabase
-    .from('tactical_analysis')
-    .select('*')
-    .eq('team_id', ARSENAL_ID)
     .single()
 
   const { data: players } = await supabase
@@ -59,7 +54,7 @@ export default async function RivalPage() {
         <TabsList className="bg-white">
           <TabsTrigger value="starters">Titulares</TabsTrigger>
           <TabsTrigger value="subs">Suplentes</TabsTrigger>
-          <TabsTrigger value="analysis">Análisis Táctico</TabsTrigger>
+          <TabsTrigger value="analysis">Análisis IA</TabsTrigger>
         </TabsList>
 
         <TabsContent value="starters" className="space-y-6">
@@ -148,88 +143,7 @@ export default async function RivalPage() {
         </TabsContent>
 
         <TabsContent value="analysis" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Swords className="w-5 h-5 text-emerald-600" />
-                  Análisis Ofensivo
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-emerald-50 rounded-lg p-4">
-                  <p className="text-sm font-medium text-emerald-800">Estilo</p>
-                  <p className="text-slate-700 mt-1">{analysis?.attack_style}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Fortalezas</p>
-                  <ul className="space-y-2">
-                    {analysis?.attack_strengths.map((s, i) => (
-                      <li key={i} className="text-sm text-slate-600 flex gap-2">
-                        <span className="text-emerald-500">+</span> {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Debilidades</p>
-                  <ul className="space-y-2">
-                    {analysis?.attack_weaknesses.map((w, i) => (
-                      <li key={i} className="text-sm text-slate-600 flex gap-2">
-                        <span className="text-amber-500">-</span> {w}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Shield className="w-5 h-5 text-blue-600" />
-                  Análisis Defensivo
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <p className="text-sm font-medium text-blue-800">Estilo</p>
-                  <p className="text-slate-700 mt-1">{analysis?.defense_style}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Fortalezas</p>
-                  <ul className="space-y-2">
-                    {analysis?.defense_strengths.map((s, i) => (
-                      <li key={i} className="text-sm text-slate-600 flex gap-2">
-                        <span className="text-blue-500">+</span> {s}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-slate-700 mb-2">Debilidades</p>
-                  <ul className="space-y-2">
-                    {analysis?.defense_weaknesses.map((w, i) => (
-                      <li key={i} className="text-sm text-slate-600 flex gap-2">
-                        <span className="text-red-500">-</span> {w}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {analysis?.tactical_notes && (
-            <Card className="border-0 shadow-lg">
-              <CardHeader>
-                <CardTitle>Notas Tácticas Generales</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-slate-700 leading-relaxed">{analysis.tactical_notes}</p>
-              </CardContent>
-            </Card>
-          )}
+          <RivalAIAnalysis rival={rival} players={players || []} />
         </TabsContent>
       </Tabs>
     </div>
